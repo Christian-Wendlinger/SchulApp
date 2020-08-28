@@ -111,7 +111,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
     // reset ToDos
     fun resetToDos() {
         val db = writableDatabase
-        db.execSQL("UPDATE todos SET checked = false")
+        db.execSQL("UPDATE todos SET checked = 0")
     }
 
     // neuen erledigt eintrag einfügen
