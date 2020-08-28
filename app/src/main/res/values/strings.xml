@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Schule</string>
+
+    <string name="material_calendar_monday">Mo</string>
+    <string name="material_calendar_tuesday">Di</string>
+    <string name="material_calendar_wednesday">Mi</string>
+    <string name="material_calendar_thursday">Do</string>
+    <string name="material_calendar_friday">Fr</string>
+    <string name="material_calendar_saturday">Sa</string>
+    <string name="material_calendar_sunday">So</string>
+
+    <array name="material_calendar_months_array">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </array>
+
+    <string name="material_calendar_today_button">Heute</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+</resources>
