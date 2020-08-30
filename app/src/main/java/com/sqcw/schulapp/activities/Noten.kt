@@ -1,21 +1,22 @@
 package com.sqcw.schulapp.activities
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.RadioButton
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sqcw.schulapp.*
 import com.sqcw.schulapp.adapters.FaecherAdapter
+import com.sqcw.schulapp.models.NoteModel
 import kotlinx.android.synthetic.main.activity_noten.*
 
 
 class Noten : AppCompatActivity() {
     private val db = DatabaseHelper(this)
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_noten)
@@ -27,8 +28,7 @@ class Noten : AppCompatActivity() {
 
 
         faecher = db.readFaecher()
-        fachListe.layoutManager = LinearLayoutManager(this)
-        fachListe.adapter = FaecherAdapter(faecher)
+        loadFaecher()
 
         // set halbjahrButton
         halbjahr = db.readHalbjahr()
@@ -36,6 +36,9 @@ class Noten : AppCompatActivity() {
         halbjahrWechselnButton.setOnClickListener {
             initializeHalbjahrDialog()
         }
+
+        // Halbjahrsschnitt anzeigen
+        setHalbjahrSchnitt()
     }
 
 
@@ -56,7 +59,8 @@ class Noten : AppCompatActivity() {
         fachnamen = db.readFaecherNames()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fachnamen)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        dialogView.findViewById<Spinner>(R.id.fachAuswahl).adapter = adapter
+        val fachspinner = dialogView.findViewById<Spinner>(R.id.fachAuswahl)
+        fachspinner.adapter = adapter
 
         // initialize second spinner
         val notenArten = arrayListOf<String>()
@@ -71,6 +75,72 @@ class Noten : AppCompatActivity() {
 
         customDialog.show()
         customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+
+            val datum = dialogView.findViewById<EditText>(R.id.noteDatum).text.toString()
+            val notenString = dialogView.findViewById<EditText>(R.id.note).text.toString()
+            val note = if (notenString != "") notenString.toInt() else -1
+            val fach = fachspinner.selectedItem.toString()
+
+            // Eingaben auf Gültigkeit prüfen
+            if (datum != "" && note > -1 && note < 16) {
+                // Note in die Datenbank einfügen
+                db.insertNote(
+                    NoteModel(
+                        0,
+                        halbjahr,
+                        datum,
+                        fach,
+                        dialogView.findViewById<Spinner>(R.id.notenArt).selectedItem.toString(),
+                        note
+                    )
+                )
+                customDialog.dismiss()
+                loadFaecher()
+
+                // Notenschnitt des Fachs anpassen
+                db.readNoten(fach)
+                val fachschnitt = berechneFachschnitt(fach)
+
+                // neuen Schnitt in DB eintragen
+                db.updateSchnitt(halbjahr, fach, fachschnitt)
+
+                // Halbjahresschnitt anpassen
+                val fachSchnitte = mutableListOf<Int>()
+                for (f in db.readFaecher()) {
+                    val schnitt = db.readRoundedSchnitte(f.name)
+                    if (schnitt > -1) fachSchnitte.add(schnitt)
+                }
+                // Halbjahresschnitt in der Datenbank aktualisieren
+                if (fachSchnitte.isNotEmpty()) {
+                    db.updateSchnitt(
+                        halbjahr,
+                        "Halbjahr",
+                        fachSchnitte.sum().toFloat() / fachSchnitte.size
+                    )
+                }
+                setHalbjahrSchnitt()
+                //Abischnitt anpassen
+            }
+            // eingaben falsch
+            else {
+                when {
+                    datum == "" -> Toast.makeText(
+                        this, "Datum darf nicht leer sein",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    note == -1 -> Toast.makeText(
+                        this,
+                        "Note darf nicht leer sein",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    else -> Toast.makeText(
+                        this,
+                        "Note muss zwischen 0 und 15 liegen",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
         }
     }
 
@@ -116,13 +186,15 @@ class Noten : AppCompatActivity() {
                     // read new value to change the button text
                     halbjahr = db.readHalbjahr()
                     setHalbjahrButtonText()
+                    loadFaecher()
+                    setHalbjahrSchnitt()
                     break
                 }
             }
         }
     }
 
-    // setr button of the Text
+    // set button of the Text
     private fun setHalbjahrButtonText() {
         when (halbjahr) {
             1 -> halbjahrWechselnButton.text = "11/1"
@@ -132,5 +204,19 @@ class Noten : AppCompatActivity() {
             5 -> halbjahrWechselnButton.text = "13/1"
             6 -> halbjahrWechselnButton.text = "13/2"
         }
+    }
+
+    // Halbjahrschnitt festlegen
+    @SuppressLint("SetTextI18n")
+    fun setHalbjahrSchnitt() {
+        val schnitt = db.readSchnitte("Halbjahr")
+        if (schnitt > -1) halbjahrSchnittText.text =
+            "${"%.2f".format(schnitt)} - ${"%.2f".format((17 - schnitt) / 3)}"
+        else halbjahrSchnittText.text = "N/A"
+    }
+
+    fun loadFaecher() {
+        fachListe.layoutManager = LinearLayoutManager(this)
+        fachListe.adapter = FaecherAdapter(faecher, this)
     }
 }
