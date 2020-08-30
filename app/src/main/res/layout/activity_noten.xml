@@ -29,4 +29,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
+    <Button
+        android:id="@+id/halbjahrWechselnButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+
+        android:background="@drawable/rounded_button"
+        android:elevation="2dp"
+        android:text="11/0"
+        android:textAllCaps="false"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addNoteButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addNoteButton" />
+
+    <TextView
+        android:id="@+id/halbjahrSchnittText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:text="00,0"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addNoteButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addNoteButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

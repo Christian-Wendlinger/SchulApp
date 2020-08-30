@@ -9,3 +9,4 @@ var erledigt = mutableListOf<ErledigtModel>()
 var nichtErledigt = mutableListOf<ErledigtModel>()
 var faecher = mutableListOf<FachModel>()
 var fachnamen = arrayListOf<String>()
+var halbjahr = 0
