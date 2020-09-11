@@ -15,6 +15,7 @@ var klausurNoten = mutableListOf<NoteModel>()
 var testNoten = mutableListOf<NoteModel>()
 var abfrageNoten = mutableListOf<NoteModel>()
 var vortragsNoten = mutableListOf<NoteModel>()
+var stundenplanSrc = ""
 
 
 fun berechneFachschnitt(fach: String): Float {

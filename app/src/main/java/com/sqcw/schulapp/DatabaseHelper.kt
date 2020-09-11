@@ -77,7 +77,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
                     "punkte INTEGER)"
         )
 
-        //tabellte für Schnitte
+        // tabelle für Schnitte
         db?.execSQL(
             "CREATE TABLE schnitte (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -86,6 +86,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
                     "genau REAL," +
                     "gerundet INTEGER)"
         )
+
+        //tabelle für Stundenplanbild
+        db?.execSQL("CREATE TABLE stundenplanBild (src TEXT PRIMARY KEY)")
+        db?.execSQL("INSERT INTO stundenplanBild VALUES ('@android:drawable/ic_delete')")
 
         // Schnitte der einzelnen Fächer pro Halbjahr
         for (fach in mutableListOf(
@@ -493,5 +497,27 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
             "halbjahr = ? AND fach = ?",
             arrayOf(halbjahr.toString(), fach)
         )
+    }
+
+
+    // Stundenplan Bild auslesen
+    fun readStundenplanSrc(): String {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM stundenplanBild", null)
+
+        cursor.moveToFirst()
+
+        return cursor.getString(0)
+    }
+
+
+    // Stundenplan Bild updaten
+    fun updateStundenplanSrc(src: String) {
+        val db = writableDatabase
+
+        val contentValues = ContentValues()
+        contentValues.put("src", src)
+
+        db.execSQL("UPDATE stundenplanBild SET src = ?", arrayOf(src))
     }
 }

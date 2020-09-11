@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.sqcw.schulapp"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -36,4 +36,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'sun.bob:mcalendarview:1.0.0'
+    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
+    implementation 'com.github.florent37:inline-activity-result-kotlin:1.0.4'
 }
