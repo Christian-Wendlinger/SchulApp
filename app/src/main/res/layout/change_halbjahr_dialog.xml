@@ -18,15 +18,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioButton
-        android:id="@+id/radioButton111"
+        android:id="@+id/radioButton11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:text="11/1"
+        android:text="11"
+        app:layout_constraintBottom_toBottomOf="@+id/radioButton122"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/halbjahrWechselnText" />
+        app:layout_constraintTop_toTopOf="@+id/radioButton121" />
 
     <RadioButton
         android:id="@+id/radioButton131"
@@ -46,17 +45,8 @@
         android:layout_marginTop="15dp"
         android:text="12/1"
         app:layout_constraintEnd_toStartOf="@+id/radioButton131"
-        app:layout_constraintStart_toEndOf="@+id/radioButton111"
+        app:layout_constraintStart_toEndOf="@+id/radioButton11"
         app:layout_constraintTop_toBottomOf="@+id/halbjahrWechselnText" />
-
-    <RadioButton
-        android:id="@+id/radioButton112"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:text="11/2"
-        app:layout_constraintStart_toStartOf="@+id/radioButton111"
-        app:layout_constraintTop_toBottomOf="@+id/radioButton111" />
 
     <RadioButton
         android:id="@+id/radioButton122"

@@ -11,7 +11,7 @@ import com.sqcw.schulapp.models.ToDoModel
 import java.util.*
 import kotlin.math.roundToInt
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db", null, 1) {
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db", null, 2) {
     override fun onCreate(db: SQLiteDatabase?) {
         // create table for ToDos (id, name, checked)
         db?.execSQL(
@@ -44,27 +44,29 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
         // create table for individual courses
         db?.execSQL(
             "CREATE TABLE fach (" +
-                    "name TEXT PRIMARY KEY," +
-                    "farbcode TEXT)"
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name TEXT," +
+                    "farbcode TEXT," +
+                    "jahr INTEGER)"
         )
 
         // fächer einfügen
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Chemie', '#c4c4c4')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Informatik', '#000000')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Gesch. / Gem.', '#a16f32')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Deutsch', '#ad0e00')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('VWL / BWL', '#ff7119')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Englisch', '#c7c702')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Biologie', '#56cf00')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Sport', '#11850f')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Physik', '#6ac1cc')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Mathe', '#00277a')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Religion', '#660980')")
-        db?.execSQL("INSERT INTO fach(name, farbcode) VALUES ('Spanisch', '#eb13e0')")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Chemie', '#c4c4c4', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Informatik', '#000000', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('GGK', '#a16f32', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Deutsch', '#ad0e00', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('VBRW', '#ff7119', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Englisch', '#c7c702', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Biologie', '#56cf00', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Sport', '#11850f', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Physik', '#6ac1cc', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Mathematik', '#00277a', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Religion', '#660980', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Spanisch', '#eb13e0', 11)")
 
         //tabelle für aktuelles Halbjahr
         db?.execSQL("CREATE TABLE halbjahr(id INTEGER PRIMARY KEY)")
-        db?.execSQL("INSERT INTO halbjahr VALUES (1)")
+        db?.execSQL("INSERT INTO halbjahr VALUES (11)")
 
         //tabelle für noten
         db?.execSQL(
@@ -91,49 +93,105 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
         db?.execSQL("CREATE TABLE stundenplanBild (src TEXT PRIMARY KEY)")
         db?.execSQL("INSERT INTO stundenplanBild VALUES ('@android:drawable/ic_delete')")
 
-        // Schnitte der einzelnen Fächer pro Halbjahr
+        // Schnitte für Klasse 11
         for (fach in mutableListOf(
             "Chemie",
             "Informatik",
-            "Gesch. / Gem.",
+            "GGK",
             "Deutsch",
-            "VWL / BWL",
+            "VBRW",
             "Englisch",
             "Biologie",
             "Sport",
             "Physik",
-            "Mathe",
+            "Mathematik",
             "Religion",
             "Spanisch"
         )) {
-            for (i in 1 until 7) {
-                db?.execSQL(
-                    "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (?, ?, -1, -1)",
-                    arrayOf(i, fach)
-                )
-            }
-        }
-
-        // Abischnitt
-        db?.execSQL("INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (7, 'Abitur', -1, -1)")
-
-        // Halbahresgesamtschnitte
-        for (i in 1 until 7) {
             db?.execSQL(
-                "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (?, 'Halbjahr', -1, -1)",
-                arrayOf(i)
+                "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (11, ?, -1, -1)",
+                arrayOf(fach)
             )
         }
+
+        // Gesamtschnitt für Klasse 11
+        db?.execSQL(
+            "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (11, 'Halbjahr', -1, -1)"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS todos")
-        db?.execSQL("DROP TABLE IF EXISTS todosErledigt")
+
+        // update für Klasse 11 only
         db?.execSQL("DROP TABLE IF EXISTS fach")
-        db?.execSQL("DROP TABLE IF EXISTS halbjahr")
-        db?.execSQL("DROP TABLE IF EXISTS noten")
+
+        // create table for individual courses
+        db?.execSQL(
+            "CREATE TABLE fach (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name TEXT," +
+                    "farbcode TEXT," +
+                    "jahr INTEGER)"
+        )
+
+        // fächer einfügen
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Chemie', '#c4c4c4', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Informatik', '#000000', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('GGK', '#a16f32', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Deutsch', '#ad0e00', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('VBRW', '#ff7119', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Englisch', '#c7c702', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Biologie', '#56cf00', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Sport', '#11850f', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Physik', '#6ac1cc', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Mathematik', '#00277a', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Religion', '#660980', 11)")
+        db?.execSQL("INSERT INTO fach(name, farbcode, jahr) VALUES ('Spanisch', '#eb13e0', 11)")
+
+
+        // Schnitte für Klasse 11 updaten
         db?.execSQL("DROP TABLE IF EXISTS schnitte")
-        onCreate(db)
+
+        // tabelle für Schnitte
+        db?.execSQL(
+            "CREATE TABLE schnitte (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "halbjahr INTEGER," +
+                    "fach TEXT," +
+                    "genau REAL," +
+                    "gerundet INTEGER)"
+        )
+
+        // Schnitte für Klasse 11
+        for (fach in mutableListOf(
+            "Chemie",
+            "Informatik",
+            "GGK",
+            "Deutsch",
+            "VBRW",
+            "Englisch",
+            "Biologie",
+            "Sport",
+            "Physik",
+            "Mathematik",
+            "Religion",
+            "Spanisch"
+        )) {
+            db?.execSQL(
+                "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (11, ?, -1, -1)",
+                arrayOf(fach)
+            )
+        }
+
+        // Gesamtschnitt für Klasse 11
+        db?.execSQL(
+            "INSERT INTO schnitte(halbjahr, fach, genau, gerundet) VALUES (11, 'Halbjahr', -1, -1)"
+        )
+
+        //tabelle für aktuelles Halbjahr Klasse 11 only
+        db?.execSQL("DROP TABLE IF EXISTS halbjahr")
+        db?.execSQL("CREATE TABLE halbjahr(id INTEGER PRIMARY KEY)")
+        db?.execSQL("INSERT INTO halbjahr VALUES (11)")
     }
 
     //read the ToDos from Database and insert into global variable
@@ -284,12 +342,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
     // read all faecher info
     fun readFaecher(): MutableList<FachModel> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM fach", null)
+        val cursor = db.rawQuery("SELECT * FROM fach WHERE jahr = ?", arrayOf(halbjahr.toString()))
 
         val tmp = mutableListOf<FachModel>()
 
         while (cursor.moveToNext()) {
-            tmp.add(FachModel(cursor.getString(0), cursor.getString(1)))
+            tmp.add(FachModel(cursor.getString(1), cursor.getString(2)))
         }
         cursor.close()
 
@@ -299,11 +357,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "SchulApp.db"
     //read only faecher name
     fun readFaecherNames(): ArrayList<String> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM fach", null)
+        val cursor = db.rawQuery("SELECT * FROM fach WHERE jahr = ?", arrayOf(halbjahr.toString()))
 
         val tmp = arrayListOf<String>()
         while (cursor.moveToNext()) {
-            tmp.add(cursor.getString(0))
+            tmp.add(cursor.getString(1))
         }
         cursor.close()
 

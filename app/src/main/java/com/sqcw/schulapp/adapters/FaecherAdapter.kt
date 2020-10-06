@@ -48,7 +48,9 @@ class FaecherAdapter(private var faecherInternal: MutableList<FachModel>, activi
 
         // Fachschnitt auslesen
         val schnitt = db.readSchnitte(holder.itemView.fachtext.text.toString())
-        if (schnitt > -1) holder.itemView.fachschnitt.text = "%.2f".format(schnitt)
+        if (schnitt > -1) holder.itemView.fachschnitt.text =
+            "${"%.2f".format(schnitt)} - ${"%.2f".format((17 - schnitt) / 3)}"
+        else holder.itemView.fachschnitt.text = "N/A"
 
         db.readNoten(holder.itemView.fachtext.text.toString())
 

@@ -85,7 +85,8 @@ class NotenAdapter(private var notenInternal: MutableList<NoteModel>, activity: 
 
             // Schnitte neu ausrechnen
             // Fachschnitt
-            val fachschnitt = berechneFachschnitt(fach)
+            var fachschnitt = (-1.0).toFloat()
+            if (halbjahr == 11) fachschnitt = berechneFachschnittKlasse11(fach)
             db.updateSchnitt(halbjahr, fach, fachschnitt)
 
             // Halbjahresschnitt

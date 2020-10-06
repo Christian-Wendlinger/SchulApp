@@ -26,12 +26,15 @@ class Noten : AppCompatActivity() {
             initializeNotenDialog()
         }
 
+        //aktuelles Halbjahr auslesen
+        halbjahr = db.readHalbjahr()
 
+
+        // facher auslesen
         faecher = db.readFaecher()
         loadFaecher()
 
         // set halbjahrButton
-        halbjahr = db.readHalbjahr()
         setHalbjahrButtonText()
         halbjahrWechselnButton.setOnClickListener {
             initializeHalbjahrDialog()
@@ -99,7 +102,8 @@ class Noten : AppCompatActivity() {
 
                 // Notenschnitt des Fachs anpassen
                 db.readNoten(fach)
-                val fachschnitt = berechneFachschnitt(fach)
+                var fachschnitt = (-1.0).toFloat()
+                if (halbjahr == 11) fachschnitt = berechneFachschnittKlasse11(fach)
 
                 // neuen Schnitt in DB eintragen
                 db.updateSchnitt(halbjahr, fach, fachschnitt)
@@ -158,8 +162,7 @@ class Noten : AppCompatActivity() {
         val customDialog = dialog.create()
 
         val radioButtons = mutableListOf<RadioButton>(
-            dialogView.findViewById(R.id.radioButton111),
-            dialogView.findViewById(R.id.radioButton112),
+            dialogView.findViewById(R.id.radioButton11),
             dialogView.findViewById(R.id.radioButton121),
             dialogView.findViewById(R.id.radioButton122),
             dialogView.findViewById(R.id.radioButton131),
@@ -178,31 +181,27 @@ class Noten : AppCompatActivity() {
         // show and listener
         customDialog.show()
         customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            for (i in 0 until radioButtons.size) {
-                if (radioButtons[i].isChecked) {
-                    db.updateHalbjahr(i + 1)
-                    customDialog.dismiss()
 
-                    // read new value to change the button text
-                    halbjahr = db.readHalbjahr()
-                    setHalbjahrButtonText()
-                    loadFaecher()
-                    setHalbjahrSchnitt()
-                    break
-                }
-            }
+            // add other scenarios later
+            if (radioButtons[0].isChecked) db.updateHalbjahr(11)
+
+            customDialog.dismiss()
+
+            // load new data and show
+            halbjahr = db.readHalbjahr()
+            setHalbjahrButtonText()
+
+            faecher = db.readFaecher()
+            loadFaecher()
+
+            setHalbjahrSchnitt()
         }
     }
 
     // set button of the Text
     private fun setHalbjahrButtonText() {
         when (halbjahr) {
-            1 -> halbjahrWechselnButton.text = "11/1"
-            2 -> halbjahrWechselnButton.text = "11/2"
-            3 -> halbjahrWechselnButton.text = "12/1"
-            4 -> halbjahrWechselnButton.text = "12/2"
-            5 -> halbjahrWechselnButton.text = "13/1"
-            6 -> halbjahrWechselnButton.text = "13/2"
+            11 -> halbjahrWechselnButton.text = halbjahr.toString()
         }
     }
 

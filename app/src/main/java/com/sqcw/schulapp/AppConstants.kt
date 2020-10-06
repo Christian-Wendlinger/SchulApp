@@ -18,7 +18,7 @@ var vortragsNoten = mutableListOf<NoteModel>()
 var stundenplanSrc = ""
 
 
-fun berechneFachschnitt(fach: String): Float {
+fun berechneFachschnittKlasse11(fach: String): Float {
     // Fall 1 - mindestens eine Note vorhanden
     if (klausurNoten.isNotEmpty() || testNoten.isNotEmpty() || abfrageNoten.isNotEmpty() || vortragsNoten.isNotEmpty()) {
         // nur klausurnoten
@@ -29,8 +29,23 @@ fun berechneFachschnitt(fach: String): Float {
         else if (klausurNoten.isEmpty() && (testNoten.isNotEmpty() || abfrageNoten.isNotEmpty() || vortragsNoten.isNotEmpty())) {
             return calculateNotenOhneKlausuren()
         } else {
-            return (klausurNoten.sumBy { note -> note.punkte }
-                .toFloat() / klausurNoten.size + calculateNotenOhneKlausuren()) / 2
+            return when (fach) {
+                in arrayOf(
+                    "VBRW",
+                    "Biologie",
+                    "Chemie",
+                    "Englisch",
+                    "Deutsch",
+                    "Religion"
+                ) -> (klausurNoten.sumBy { note -> note.punkte }
+                    .toFloat() * 2 / klausurNoten.size + calculateNotenOhneKlausuren()) / 3
+
+                "Spanisch" -> (klausurNoten.sumBy { note -> note.punkte }
+                    .toFloat() * 3 / klausurNoten.size + calculateNotenOhneKlausuren() * 2) / 5
+
+                else -> (klausurNoten.sumBy { note -> note.punkte }
+                    .toFloat() * 3 / klausurNoten.size + calculateNotenOhneKlausuren()) / 4
+            }
         }
     } else {
         return (-1).toFloat()
