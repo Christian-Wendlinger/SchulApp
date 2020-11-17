@@ -33,7 +33,7 @@ class NotenAdapter(private var notenInternal: MutableList<NoteModel>, activity: 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.datum.text = notenInternal[position].datum
-        holder.itemView.note.text = notenInternal[position].punkte.toString()
+        holder.itemView.note.text = notenInternal[position].note.toString()
 
         // note löschen
         val db = DatabaseHelper(holder.itemView.context)

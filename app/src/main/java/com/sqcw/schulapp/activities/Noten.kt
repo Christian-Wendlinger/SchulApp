@@ -81,11 +81,11 @@ class Noten : AppCompatActivity() {
 
             val datum = dialogView.findViewById<EditText>(R.id.noteDatum).text.toString()
             val notenString = dialogView.findViewById<EditText>(R.id.note).text.toString()
-            val note = if (notenString != "") notenString.toInt() else -1
+            val note = if (notenString != "") notenString.toFloat() else (-1).toFloat()
             val fach = fachspinner.selectedItem.toString()
 
             // Eingaben auf Gültigkeit prüfen
-            if (datum != "" && note > -1 && note < 16) {
+            if (datum != "" && note > -1 && note <= 15.0) {
                 // Note in die Datenbank einfügen
                 db.insertNote(
                     NoteModel(
@@ -132,14 +132,14 @@ class Noten : AppCompatActivity() {
                         this, "Datum darf nicht leer sein",
                         Toast.LENGTH_SHORT
                     ).show()
-                    note == -1 -> Toast.makeText(
+                    note == (-1).toFloat() -> Toast.makeText(
                         this,
                         "Note darf nicht leer sein",
                         Toast.LENGTH_SHORT
                     ).show()
                     else -> Toast.makeText(
                         this,
-                        "Note muss zwischen 0 und 15 liegen",
+                        "Note muss zwischen 1,0 und 15 liegen",
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -209,8 +209,7 @@ class Noten : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun setHalbjahrSchnitt() {
         val schnitt = db.readSchnitte("Halbjahr")
-        if (schnitt > -1) halbjahrSchnittText.text =
-            "${"%.2f".format(schnitt)} - ${"%.2f".format((17 - schnitt) / 3)}"
+        if (schnitt > -1) halbjahrSchnittText.text = "${"%.2f".format(schnitt)}"
         else halbjahrSchnittText.text = "N/A"
     }
 

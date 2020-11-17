@@ -23,7 +23,8 @@ fun berechneFachschnittKlasse11(fach: String): Float {
     if (klausurNoten.isNotEmpty() || testNoten.isNotEmpty() || abfrageNoten.isNotEmpty() || vortragsNoten.isNotEmpty()) {
         // nur klausurnoten
         if (klausurNoten.isNotEmpty() && testNoten.isEmpty() && abfrageNoten.isEmpty() && vortragsNoten.isEmpty()) {
-            return klausurNoten.sumBy { note -> note.punkte }.toFloat() / klausurNoten.size
+            return klausurNoten.sumByDouble { note -> note.note.toDouble() }
+                .toFloat() / klausurNoten.size
         }
         // keine Klausurnoten
         else if (klausurNoten.isEmpty() && (testNoten.isNotEmpty() || abfrageNoten.isNotEmpty() || vortragsNoten.isNotEmpty())) {
@@ -37,13 +38,13 @@ fun berechneFachschnittKlasse11(fach: String): Float {
                     "Englisch",
                     "Deutsch",
                     "Religion"
-                ) -> (klausurNoten.sumBy { note -> note.punkte }
+                ) -> (klausurNoten.sumByDouble { note -> note.note.toDouble() }
                     .toFloat() * 2 / klausurNoten.size + calculateNotenOhneKlausuren()) / 3
 
-                "Spanisch" -> (klausurNoten.sumBy { note -> note.punkte }
+                "Spanisch" -> (klausurNoten.sumByDouble { note -> note.note.toDouble() }
                     .toFloat() * 3 / klausurNoten.size + calculateNotenOhneKlausuren() * 2) / 5
 
-                else -> (klausurNoten.sumBy { note -> note.punkte }
+                else -> (klausurNoten.sumByDouble { note -> note.note.toDouble() }
                     .toFloat() * 3 / klausurNoten.size + calculateNotenOhneKlausuren()) / 4
             }
         }
@@ -54,24 +55,24 @@ fun berechneFachschnittKlasse11(fach: String): Float {
 
 // Schnitt ohne Klausuren ausrechnen
 fun calculateNotenOhneKlausuren(): Float {
-    var punkte = 0
+    var punkte: Float = 0f
     var anzahl = 0
 
     // Testnoten
     if (testNoten.isNotEmpty()) {
-        punkte += testNoten.sumBy { note -> note.punkte }
+        punkte += testNoten.sumByDouble { note -> note.note.toDouble() }.toFloat()
         anzahl += testNoten.size
     }
 
     // Abfragenoten
     if (abfrageNoten.isNotEmpty()) {
-        punkte += abfrageNoten.sumBy { note -> note.punkte }
+        punkte += abfrageNoten.sumByDouble { note -> note.note.toDouble() }.toFloat()
         anzahl += abfrageNoten.size
     }
 
     // Vorträge
     if (vortragsNoten.isNotEmpty()) {
-        punkte += vortragsNoten.sumBy { note -> note.punkte }
+        punkte += vortragsNoten.sumByDouble { note -> note.note.toDouble() }.toFloat()
         anzahl += vortragsNoten.size
     }
 

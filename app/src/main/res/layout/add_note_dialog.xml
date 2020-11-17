@@ -49,7 +49,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Note"
-        android:inputType="number"
+        android:inputType="number|numberDecimal"
         app:layout_constraintEnd_toEndOf="@+id/fachAuswahl"
         app:layout_constraintStart_toStartOf="@+id/fachAuswahl"
         app:layout_constraintTop_toBottomOf="@+id/fachAuswahl" />

@@ -6,5 +6,5 @@ data class NoteModel(
     var datum: String,
     var fach: String,
     var art: String,
-    var punkte: Int
+    var note: Float
 )
