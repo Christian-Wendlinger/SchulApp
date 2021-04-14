@@ -1,7 +1,7 @@
-# Beschreibung
-Dieses Projekt ist speziell für mein Boo entwickelt, damit sie ihr künftiges Schulleben bis zum Abitur besser managen kann.
+# Description
+This project is personalized and developed for a private person. This App helps to manage school until the final exams.
 
-# Funktionen
-- eine Morgenroutine, die jeden Tag zurück gesetzt wird und für jeden Tag, an dem die App benutzt wird, speichert und in einem Kalender anzeigt, ob diese erledigt wurde
-- einen Stundenplan
-- eine Notenübersicht, welche Noten für jedes Halbjahr speichert und den Notenschnitt ausrechnet bzw. annähert
+# Functionality
+* displaying a fix morning routine. The results (finished / unfinished) are saved daily and displayed in a calendar.
+* displaying a schedule as image (is drawn by the person)
+* a CRUD feature for managing and calculating grades
